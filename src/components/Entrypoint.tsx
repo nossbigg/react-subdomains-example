@@ -23,6 +23,11 @@ const determinePageComponent = (
 
   const isValidOwnDomain = domainComponent === OWN_HOSTED_DOMAIN_KEY;
   if (isValidOwnDomain) {
+    const isDomainUrl = hostComponents.length === 1;
+    if (isDomainUrl) {
+      return <ExampleDomain1 domainKey={domainComponent} />;
+    }
+
     const isSubdomainUrl = hostComponents.length === 2;
     if (isSubdomainUrl) {
       const [, subdomainComponent] = hostComponents;
@@ -34,10 +39,12 @@ const determinePageComponent = (
       );
     }
 
-    return <ExampleDomain1 domainKey={domainComponent} />;
+    window.location.replace(`http://${domainComponent}.com`);
+    return <></>;
   }
 
-  const isValidOtherDomain = VALID_OTHER_DOMAINS.has(domainComponent);
+  const isValidOtherDomain =
+    hostComponents.length === 1 && VALID_OTHER_DOMAINS.has(domainComponent);
   if (isValidOtherDomain) {
     return (
       <SubDomain subdomainKey={domainComponent} isExternallyHosted={true} />
